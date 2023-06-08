@@ -53,5 +53,6 @@ int main()
 	sa.sa_handler = get_bit;
 	sigaction(SIGUSR1, &sa, 0);
 	sigaction(SIGUSR2, &sa, 0);
+	// while loop that checks for signals
 	return 0;
 }
