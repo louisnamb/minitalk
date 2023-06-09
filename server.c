@@ -5,6 +5,17 @@
 #include "printf/ft_printf.h"
 #include <signal.h>
 
+/*
+Server: prints PID and recieves bits, converting them to char,
+
+Server prints PID
+
+Client recieves PID and string, sending bits
+to represent the characters. 
+
+Server recieves it and prints it.
+*/
+
 static void get_bit(int signals)
 {
 	static int num[8];
@@ -37,7 +48,8 @@ static void bit2char(int *binary)
 
 int main()
 {
-    int pid;
+	printf("hgello");
+    pid_t pid;
 
     pid = getpid();
     ft_printf("%d\n", pid);	
@@ -49,10 +61,15 @@ int main()
 	/* Signal setup */
 	struct sigaction sa;
 	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = SA_RESTART | SA_SIGINFO;
+	sa.sa_flags = 0;
 	sa.sa_handler = get_bit;
 	sigaction(SIGUSR1, &sa, 0);
 	sigaction(SIGUSR2, &sa, 0);
 	// while loop that checks for signals
+	while (1)
+		sleep(1);
 	return 0;
 }
+/*
+Infinite while loop is happening.
+*/

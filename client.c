@@ -5,9 +5,18 @@
 #include "printf/ft_printf.h"
 #include <signal.h>
 
-/* Ssshhh! Global variables!	We need
-	 these so that main() and sh1 & sh2
-	 can communicate. */
+/*
+Client: Takes PID and string, converting each char to binary
+and sending that to the server.
+
+✅ Server prints PID
+
+✅ Client uses PID and string, sending bits
+to represent the characters. 
+
+✅ Server recieves it and prints it.
+*/
+
 int main(int argc, char **argv)
 {
 	/* Get p1's process ID. */
@@ -16,9 +25,7 @@ int main(int argc, char **argv)
 	pid_t pid = ft_atoi(argv[1]);
 	
 	/* Signal setup */
-	struct sigaction sa = { 0 };
-	sigaction(SIGUSR1, &sa, 0);
-	sigaction(SIGUSR2, &sa, 0);
+
 
 	int shift = 0;
 	while (argv[2][i])
@@ -35,8 +42,6 @@ int main(int argc, char **argv)
 		i++;
 	}
 	/* Send the string passed to the server */
-	bin2char function;
-	/* Print char to bits function */
 
 	return 0;
 }
