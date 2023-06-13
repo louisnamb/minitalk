@@ -4,6 +4,7 @@
 #include "libft/libft.h"
 #include "printf/ft_printf.h"
 #include <signal.h>
+#include <sys/types.h>
 
 /*
 Client: Takes PID and string, converting each char to binary
@@ -25,23 +26,33 @@ int main(int argc, char **argv)
 	pid_t pid = ft_atoi(argv[1]);
 	
 	/* Signal setup */
-
-
-	int shift = 0;
+	int i = 0;
+	int shift = 7;
+	int stop = 0;
+	/* Check if the PID is valid */
+	if (kill(pid, 0) == -1)
+	{
+		perror("Invalid PID");
+		exit(1);
+	}
 	while (argv[2][i])
 	{
 		shift = 7;
 		while (shift >= 0)
 		{
-			if ((argv[2][i] >> shift) & 1)//If the LSB is 1, send signal SIGUSR1
-				kill(pid, SIGUSR1);
+			if (((argv[2][i] >> shift) & 1))
+				kill(pid, SIGUSR2); //31
 			else
-				kill(pid, SIGUSR2);
+				kill(pid, SIGUSR1); //30
 			shift--;
 		}
 		i++;
 	}
+	while (stop < 8)
+	{
+		kill(pid, SIGUSR1);
+		stop++;
+	}
 	/* Send the string passed to the server */
-
 	return 0;
 }

@@ -8,8 +8,8 @@
 /*
 gcc server.c -L printf -l ftprintf
 
-gcc server.c libft/ft_atoi.c printf/ft_printf.c printf/ft_strlen.c printf/hexchars.c printf/putchars.c -o server
-gcc client.c libft/ft_atoi.c printf/ft_printf.c printf/ft_strlen.c printf/hexchars.c printf/putchars.c -o client
+gcc server.c libft/ft_atoi.c libft/ft_memset.c printf/ft_printf.c printf/ft_strlen.c printf/hexchars.c printf/putchars.c -o server
+gcc client.c libft/ft_atoi.c libft/ft_memset.c printf/ft_printf.c printf/ft_strlen.c printf/hexchars.c printf/putchars.c -o client
 General map of whats going on:
 1. Run server.c to get the pid of the process.
 2. Run client.c with the pid and string to print as an argv argument
@@ -21,20 +21,20 @@ to readable characters.
 4. the client prints it.
 */
 
+#include <signal.h>
+#include <unistd.h>
+#include <stdio.h>
 
-int main()
-{
-    struct sigaction sa;
-    int pid = getpid();
-    sa.sa_handler = sigusr1_handler;
-    ft_printf("%d", pid);
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = 0;
-    if (sigaction(SIGURS1, &sa, NULL) == -1)
-    {
-        perror("sigaction error");
-        return (1);
-    }
-    
+void catcher( int sig ) {
+    printf( "inside catcher() function sig: %d\n", sig);
+}
+
+int main( int argc, char *argv[] ) {
+	int shift = 7;
+    while (shift >= 0)
+	{
+		printf("%d", ('c' >> shift) & 1);
+		shift--;
+	}
     return (0);
 }

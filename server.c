@@ -4,6 +4,7 @@
 #include "libft/libft.h"
 #include "printf/ft_printf.h"
 #include <signal.h>
+#include <sys/types.h>
 
 /*
 Server: prints PID and recieves bits, converting them to char,
@@ -16,18 +17,7 @@ to represent the characters.
 Server recieves it and prints it.
 */
 
-static void get_bit(int signals)
-{
-	static int num[8];
-	static int i = 0;
-	num = { 0 };
-	num[i] = signals;
-	if (i == 8)
-		bit2char(num);
-	i++;
-}
-
-static void bit2char(int *binary)
+static void bit2char(int *binary, int array)
 {
 	int i;
 	char sum;
@@ -46,20 +36,33 @@ static void bit2char(int *binary)
 	write(1, &sum, 1);
 }
 
+static void get_bit(int signals)
+{
+	static int num[1][8];
+	static int index = 0;
+	static int arr = 0;
+	int j = 0;
+	num[arr][index] = (signals == 31);
+	ft_printf("%d", (signals == 31));
+	index++;
+	if (index == 8)
+	{
+		bit2char(num[arr], arr);
+		index = 0;
+		num[arr + 1] = malloc(sizeof(int) * 8);
+		arr++;
+	}
+}
+
 int main()
 {
-	printf("hgello");
     pid_t pid;
 
     pid = getpid();
     ft_printf("%d\n", pid);	
-	/* Check if the PID is valid */
-	if (kill(pid, 0) == -1)
-	{
-		perror("Invalid PID");
-	}
 	/* Signal setup */
 	struct sigaction sa;
+	ft_memset(&sa, 0, sizeof(sa));
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
 	sa.sa_handler = get_bit;
@@ -67,8 +70,8 @@ int main()
 	sigaction(SIGUSR2, &sa, 0);
 	// while loop that checks for signals
 	while (1)
-		sleep(1);
-	return 0;
+		pause();
+	return (0);
 }
 /*
 Infinite while loop is happening.
