@@ -7,6 +7,8 @@
 #include <sys/types.h>
 
 /*
+gcc client.c libft/ft_atoi.c libft/ft_memset.c printf/ft_printf.c printf/ft_strlen.c printf/hexchars.c printf/putchars.c -o client
+
 Client: Takes PID and string, converting each char to binary
 and sending that to the server.
 
@@ -40,17 +42,22 @@ int main(int argc, char **argv)
 		shift = 7;
 		while (shift >= 0)
 		{
-			if (((argv[2][i] >> shift) & 1))
+			printf("%d\n", (argv[2][i] >> shift) & 1);
+			if (((argv[2][i] >> shift) & 1) == 1)
 				kill(pid, SIGUSR2); //31
+	
 			else
 				kill(pid, SIGUSR1); //30
+			usleep(1000);
 			shift--;
 		}
+		printf("\n");
 		i++;
 	}
 	while (stop < 8)
 	{
 		kill(pid, SIGUSR1);
+		usleep(1000);
 		stop++;
 	}
 	/* Send the string passed to the server */
