@@ -33,9 +33,8 @@ int main(int argc, char **argv)
 		shift = 7;
 		while (shift >= 0)
 		{
-			if (((argv[2][i] >> shift) & 1) == 1)
+			if (((argv[2][i] >> shift) & 1))
 				kill(pid, SIGUSR2);
-	
 			else
 				kill(pid, SIGUSR1);
 			usleep(50);
