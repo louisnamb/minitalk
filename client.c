@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   client.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: lnambaji <lnambaji@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/06/15 15:32:56 by lnambaji          #+#    #+#             */
+/*   Updated: 2023/06/15 15:38:58 by lnambaji         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -6,11 +18,7 @@
 #include <signal.h>
 #include <sys/types.h>
 
-/*
-gcc client.c libft/ft_atoi.c libft/ft_memset.c printf/ft_printf.c printf/ft_strlen.c printf/hexchars.c printf/putchars.c -o client
-*/
-
-int main(int argc, char **argv)
+int	main(int argc, char **argv)
 {
 	int		i;
 	int		shift;
@@ -48,5 +56,5 @@ int main(int argc, char **argv)
 		usleep(50);
 		stop++;
 	}
-	return 0;
+	return (0);
 }

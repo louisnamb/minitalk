@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*																			*/
+/*														:::	  ::::::::   */
+/*   server.c										   :+:	  :+:	:+:   */
+/*													+:+ +:+		 +:+	 */
+/*   By: lnambaji <lnambaji@student.42.fr>		  +#+  +:+	   +#+		*/
+/*												+#+#+#+#+#+   +#+		   */
+/*   Created: 2023/06/15 15:32:50 by lnambaji		  #+#	#+#			 */
+/*   Updated: 2023/06/15 15:33:56 by lnambaji		 ###   ########.fr	   */
+/*																			*/
+/* ************************************************************************** */
+
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -6,41 +18,26 @@
 #include <signal.h>
 #include <sys/types.h>
 
-/*
-		//add character to return string.
-		//add a byte if we're not add the end.
-		//once we reached the end, use bitchar to print it all out
-gcc server.c libft/ft_atoi.c libft/ft_memset.c printf/ft_printf.c printf/ft_strlen.c printf/hexchars.c printf/putchars.c -o server
-*/
-
-static char bit2char(int byte[])
+static char	bit2char(int byte[])
 {
-	int		i;
 	char	sum;
-    int		placeval;
+	int		i;
 
 	sum = 0;
-	i = 7;
-    placeval = 1;
-	while (i >= 0)
-	{
-        sum += (byte[i]) * placeval;
-		placeval = placeval * 2;
-        if (i - 1 == 0)
-            placeval = -128;
-        i--;
-    }
+	i = 8;
+	while (i-- > 0)
+		sum |= (byte[i] << (7 - i));
 	return (sum);
 }
 
-int end(int byte[])
+int	end(int byte[])
 {
 	int	i;
 
 	i = 0;
-	while (byte[i] == 0)		
+	while (byte[i] == 0)
 		i++;
-	return (i == 8);	
+	return (i == 8);
 }
 
 char	*ft_realloc(char *str, size_t size, size_t pos)
@@ -61,7 +58,7 @@ char	*ft_realloc(char *str, size_t size, size_t pos)
 	return (new_str);
 }
 
-static void get_bit(int signals)
+static void	get_bit(int signals)
 {
 	int			num[8];
 	static int	index;
@@ -73,18 +70,16 @@ static void get_bit(int signals)
 	if (chkr == 0)
 	{
 		chkr++;
-		string = malloc(sizeof(char) * max);
+		string = malloc(sizeof(char) * (max + 1));
 		string[max - 1] = '\0';
 		if (!string)
 			return ;
 	}
-	num[index] = (signals == 31);
-	index++;
+	num[index++] = (signals == 31);
 	if (index == 8)
 	{
 		index = 0;
-		string[pos] = bit2char(num);
-		pos++;
+		string[pos++] = bit2char(num);
 		if (end(num))
 		{
 			write(1, string, pos);
@@ -102,13 +97,13 @@ static void get_bit(int signals)
 	}
 }
 
-int main()
+int	main(void)
 {
-    pid_t	pid;
-	struct sigaction sa;
+	pid_t				pid;
+	struct sigaction	sa;
 
-    pid = getpid();
-    ft_printf("%d\n", pid);	
+	pid = getpid();
+	ft_printf("%d\n", pid);
 	ft_memset(&sa, 0, sizeof(sa));
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
