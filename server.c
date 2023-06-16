@@ -25,36 +25,58 @@ static char	bit2char(int byte[])
 
 	sum = 0;
 	i = 8;
+	printf("bit2char\n");
 	while (i-- > 0)
 		sum |= (byte[i] << (7 - i));
 	return (sum);
 }
 
-int	end(int byte[])
+int	end(int byte[], char **string, int *pos, int *index)
 {
 	int	i;
 
 	i = 0;
+	if (*pos == 0)
+		return (0);
 	while (byte[i] == 0)
 		i++;
+	if (i == 8)
+	{
+		write(1, *string, *pos);
+		free(*string);
+		*string = NULL;
+		*index = 0;
+		*pos = 0;
+	}
 	return (i == 8);
 }
 
-char	*ft_realloc(char *str, size_t size, size_t pos)
+char	*ft_realloc(char **str, long *size, size_t pos)
 {
 	size_t	i;
 	char	*new_str;
 
 	i = 0;
-	new_str = malloc(sizeof(char) * size);
-	while (str[i] && i < pos)
+	if (size == 0)
+		*size = 50;
+	new_str = malloc(sizeof(char) * (*size + 1));
+	if (!new_str)
+		return (NULL);
+	printf("success allocation\n");
+	while (i < pos && (*str)[i] && *size != 0)
 	{
-		new_str[i] = str[i];
+		printf("inside while reallic\n");
+		new_str[i] = (*str)[i];
 		i++;
 	}
-	new_str[size] = '\0';
-	free(str);
-	str = NULL;
+	printf("siz:%ld insert null\n", *size);
+	new_str[*size - 1] = '\0';
+	if (*str)
+	{
+		printf("freeing\n");
+		free(*str);
+		*str = NULL;
+	}
 	return (new_str);
 }
 
@@ -65,35 +87,34 @@ static void	get_bit(int signals)
 	static long	max;
 	static char	*string;
 	static int	pos;
-	static int	chkr;
 
-	if (chkr == 0)
+	if ((pos == max) && !end(num, &string, &pos, &index))
 	{
-		chkr++;
-		string = malloc(sizeof(char) * (max + 1));
-		string[max - 1] = '\0';
-		if (!string)
-			return ;
+		printf("2 here\n");
+		string = ft_realloc(&string, &max, pos);
+		max += 50;
 	}
+	printf("1 here pos: %d\n", pos);
+	// if (chkr == 0)
+	// {
+	// 	chkr++;
+	// 	string = malloc(sizeof(char) * (max + 1));
+	// 	string[max - 1] = '\0';
+	// 	if (!string)
+	// 		return ;
+	// }
 	num[index++] = (signals == 31);
 	if (index == 8)
 	{
-		index = 0;
 		string[pos++] = bit2char(num);
-		if (end(num))
-		{
-			write(1, string, pos);
-			free(string);
-			string = NULL;
-			chkr = 0;
-			pos = 0;
+		if (end(num, &string, &pos, &index))
 			return ;
-		}
-		if (pos == max)
-		{
-			string = ft_realloc(string, max, pos);
-			max += 50;
-		}
+		
+		// if (pos == max)
+		// {
+		// 	string = ft_realloc(&string, &max, pos);
+		// 	max += 50;
+		// }
 	}
 }
 
