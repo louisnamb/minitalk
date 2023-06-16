@@ -37,7 +37,7 @@ int	end(int byte[], char **string, int *pos, int *index)
 
 	i = 0;
 	if (*pos == 0)
-		return (0);
+		return (0);//change this to 1 to let it pass
 	while (byte[i] == 0)
 		i++;
 	if (i == 8)
@@ -71,7 +71,8 @@ char	*ft_realloc(char **str, long *size, size_t pos)
 	}
 	printf("siz:%ld insert null\n", *size);
 	new_str[*size - 1] = '\0';
-	if (*str)
+	if (*str)//maybe you can add another check like i != pos
+	//that way it doesnt seg fault by checking the string that is null
 	{
 		printf("freeing\n");
 		free(*str);
@@ -89,8 +90,7 @@ static void	get_bit(int signals)
 	static int	pos;
 
 	if ((pos == max) && !end(num, &string, &pos, &index))//remove "!" on the end check
-	// bc its letting it pass on the iterations you dont want it to
-																																																									//bc 
+	// bc its letting it pass on first iteration only
 	{
 		printf("2 here\n");
 		string = ft_realloc(&string, &max, pos);
