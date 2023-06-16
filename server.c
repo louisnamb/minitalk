@@ -88,7 +88,9 @@ static void	get_bit(int signals)
 	static char	*string;
 	static int	pos;
 
-	if ((pos == max) && !end(num, &string, &pos, &index))
+	if ((pos == max) && !end(num, &string, &pos, &index))//remove "!" on the end check
+	// bc its letting it pass on the iterations you dont want it to
+																																																									//bc 
 	{
 		printf("2 here\n");
 		string = ft_realloc(&string, &max, pos);
