@@ -6,7 +6,7 @@
 /*   By: lnambaji <lnambaji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 15:32:56 by lnambaji          #+#    #+#             */
-/*   Updated: 2023/06/16 15:42:39 by lnambaji         ###   ########.fr       */
+/*   Updated: 2023/06/19 16:58:17 by lnambaji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	helperfunc(int pid, char c, int stop)
 	int	shift;
 
 	shift = 7;
-	while (shift >= 0)
+	while (stop == 1 && shift >= 0)
 	{
 		if (((c >> shift) & 1))
 			kill(pid, SIGUSR2);

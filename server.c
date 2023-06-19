@@ -25,7 +25,7 @@ static char	bit2char(int byte[])
 
 	sum = 0;
 	i = 8;
-	printf("bit2char\n");
+//	printf("bit2char\n");
 	while (i-- > 0)
 		sum |= (byte[i] << (7 - i));
 	return (sum);
@@ -34,14 +34,23 @@ static char	bit2char(int byte[])
 int	end(int byte[], char **string, int *pos, int *index)
 {
 	int	i;
+	int	j;
 
 	i = 0;
-	if (*pos == 0)
-		return (0);//change this to 1 to let it pass
+	j = 0;
+	while (byte[j] == 0 || byte[j] == 1)
+		j++;
+	if (*pos == 0 && j == 8)
+	{
+//		printf("first iteration\n");
+		return (1);
+	}
 	while (byte[i] == 0)
 		i++;
+//	printf("i check: %d\n", i);
 	if (i == 8)
 	{
+//		printf("about to print\n");
 		write(1, *string, *pos);
 		free(*string);
 		*string = NULL;
@@ -62,19 +71,18 @@ char	*ft_realloc(char **str, long *size, size_t pos)
 	new_str = malloc(sizeof(char) * (*size + 1));
 	if (!new_str)
 		return (NULL);
-	printf("success allocation\n");
+//	printf("success allocation\n");
 	while (i < pos && (*str)[i] && *size != 0)
 	{
-		printf("inside while reallic\n");
+//		printf("inside while reallic\n");
 		new_str[i] = (*str)[i];
 		i++;
 	}
-	printf("siz:%ld insert null\n", *size);
+//	printf("siz:%ld insert null\n", *size);
 	new_str[*size - 1] = '\0';
-	if (*str)//maybe you can add another check like i != pos
-	//that way it doesnt seg fault by checking the string that is null
+	if (i == pos || *str)
 	{
-		printf("freeing\n");
+//		printf("freeing\n");
 		free(*str);
 		*str = NULL;
 	}
@@ -89,34 +97,21 @@ static void	get_bit(int signals)
 	static char	*string;
 	static int	pos;
 
-	if ((pos == max) && !end(num, &string, &pos, &index))//remove "!" on the end check
-	// bc its letting it pass on first iteration only
+	if ((pos == max) && end(num, &string, &pos, &index))
 	{
-		printf("2 here\n");
+//		printf("2 here\n");
 		string = ft_realloc(&string, &max, pos);
 		max += 50;
 	}
-	printf("1 here pos: %d\n", pos);
-	// if (chkr == 0)
-	// {
-	// 	chkr++;
-	// 	string = malloc(sizeof(char) * (max + 1));
-	// 	string[max - 1] = '\0';
-	// 	if (!string)
-	// 		return ;
-	// }
+//	printf("1 here pos: %d index: %d\n", pos, index);
 	num[index++] = (signals == 31);
+//	printf("recievied: %d", (signals == 31));
 	if (index == 8)
 	{
 		string[pos++] = bit2char(num);
+		index = 0;
 		if (end(num, &string, &pos, &index))
 			return ;
-		
-		// if (pos == max)
-		// {
-		// 	string = ft_realloc(&string, &max, pos);
-		// 	max += 50;
-		// }
 	}
 }
 
