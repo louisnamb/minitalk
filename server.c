@@ -25,35 +25,31 @@ static char	bit2char(int byte[])
 
 	sum = 0;
 	i = 8;
+//	printf("\033[0;33mbit2char\033[0m\n");
 //	printf("bit2char\n");
 	while (i-- > 0)
+	{
 		sum |= (byte[i] << (7 - i));
+	//	printf("\033[0;33m%d\033[0m", byte[i]);
+	}
+//	printf("\n");
 	return (sum);
 }
 
 int	end(int byte[], char **string, int *pos, int *index)
 {
 	int	i;
-	int	j;
 
 	i = 0;
-	j = 0;
-	while (byte[j] == 0 || byte[j] == 1)
-		j++;
-	if (*pos == 0 && j == 8)
-	{
-//		printf("first iteration\n");
-		return (1);
-	}
 	while (byte[i] == 0)
 		i++;
-//	printf("i check: %d\n", i);
+//	printf("\033[0;31mend: i check: %d\n\033[0m\n", 1);
 	if (i == 8)
 	{
 //		printf("about to print\n");
-		write(1, *string, *pos);
-		free(*string);
-		*string = NULL;
+		write(1, *(string), *pos);
+		free(*(string));
+		*(string) = NULL;
 		*index = 0;
 		*pos = 0;
 	}
@@ -66,9 +62,10 @@ char	*ft_realloc(char **str, long *size, size_t pos)
 	char	*new_str;
 
 	i = 0;
-	if (size == 0)
-		*size = 50;
-	new_str = malloc(sizeof(char) * (*size + 1));
+	//printf("\033[0;32minside ft_realloc\033[0m\n");
+	if ((*size) == pos)
+		*size += 50;
+	new_str = malloc(sizeof(char) * ((*size) + 1));
 	if (!new_str)
 		return (NULL);
 //	printf("success allocation\n");
@@ -79,10 +76,10 @@ char	*ft_realloc(char **str, long *size, size_t pos)
 		i++;
 	}
 //	printf("siz:%ld insert null\n", *size);
-	new_str[*size - 1] = '\0';
-	if (i == pos || *str)
+	new_str[(*size) - 1] = '\0';
+	if (i == pos || (*str))
 	{
-//		printf("freeing\n");
+	//	printf("\033[0;32mfreeing\033[0m\n");
 		free(*str);
 		*str = NULL;
 	}
@@ -97,21 +94,21 @@ static void	get_bit(int signals)
 	static char	*string;
 	static int	pos;
 
-	if ((pos == max) && end(num, &string, &pos, &index))
+	if (pos == max)// && end(num, &string, &pos, &index))
 	{
-//		printf("2 here\n");
 		string = ft_realloc(&string, &max, pos);
 		max += 50;
 	}
-//	printf("1 here pos: %d index: %d\n", pos, index);
 	num[index++] = (signals == 31);
-//	printf("recievied: %d", (signals == 31));
 	if (index == 8)
 	{
 		string[pos++] = bit2char(num);
 		index = 0;
 		if (end(num, &string, &pos, &index))
+		{
+			max = 0;
 			return ;
+		}
 	}
 }
 
