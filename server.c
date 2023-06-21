@@ -39,14 +39,12 @@ int	end(int byte[], char **string, int *pos, int *index)
 		i++;
 	if (i == 8)
 	{
-	//	printf("\033[0;31mpos: %d index: %d str: %d\033[0m\n", *pos, *index, (*(string) == NULL));
 		(*string)[(*pos)] = '\0';
 		write(1, *string, (*pos + 1));
 		free(*string);
 		*string = NULL;
 		*index = 0;
 		*pos = 0;
-	//	printf("\033[0;31mpos: %d index: %d str: %d\033[0m\n", *pos, *index, (*(string) == NULL));
 	}
 	return (i == 8);
 }
@@ -57,7 +55,7 @@ char	*ft_realloc(char **str, long *size, int pos)
 	char	*new_str;
 
 	i = 0;
-	if ((*size) == pos)
+	if ((*size) == pos || (*size) >= 50)
 		*size += 50;
 	new_str = malloc(sizeof(char) * ((*size) + 1));
 	if (!new_str)
@@ -85,22 +83,15 @@ static void	get_bit(int signals)
 	static int	pos;
 
 	if (max == 0 || pos == max)
-	{
-		printf("\033[0;31mpos: %d index: %ld str: %d\033[0m\n", pos, max, ((string) == NULL));
 		string = ft_realloc(&string, &max, pos);
-		max += 50;
-		printf("\033[0;31mpos: %d index: %ld str: %d\033[0m\n", pos, max, ((string) == NULL));
-	}
 	num[index++] = (signals == 31);
 	if (index == 8 && pos < max)
 	{
 		string[pos++] = bit2char(num);
-	//	printf("\033[0;34mpos: %d\033[0m\n", pos);
 		index = 0;
 		if (end(num, &string, &pos, &index))
 		{
 			max = 0;
-		//	printf("\033[0;31mmax: %ld pos: %d index: %d str: %d\033[0m\n", max, pos, index, ((string) == NULL));
 			return ;
 		}
 	}
