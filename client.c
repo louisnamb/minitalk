@@ -6,17 +6,11 @@
 /*   By: lnambaji <lnambaji@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/15 15:32:56 by lnambaji          #+#    #+#             */
-/*   Updated: 2023/06/20 15:12:18 by lnambaji         ###   ########.fr       */
+/*   Updated: 2023/06/22 11:26:40 by lnambaji         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include "libft/libft.h"
-#include "printf/ft_printf.h"
-#include <signal.h>
-#include <sys/types.h>
+#include "minitalk.h"
 
 void	helperfunc(int pid, char c, int stop)
 {
@@ -43,6 +37,13 @@ void	helperfunc(int pid, char c, int stop)
 	}
 }
 
+static void	recieved(int signals)
+{
+	(void)signal;
+	write(1, "Message Recieved!\n", 18);
+	exit(0);
+}
+
 int	main(int argc, char **argv)
 {
 	int		i;
@@ -50,6 +51,7 @@ int	main(int argc, char **argv)
 
 	pid = ft_atoi(argv[1]);
 	i = 0;
+	signal(SIGUSR1, recieved);
 	if (argc != 3)
 		return (1);
 	if (kill(pid, 0) == -1)

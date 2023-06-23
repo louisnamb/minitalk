@@ -10,13 +10,7 @@
 /*																			*/
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include "libft/libft.h"
-#include "printf/ft_printf.h"
-#include <signal.h>
-#include <sys/types.h>
+#include "minitalk.h"
 
 static char	bit2char(int byte[])
 {
@@ -74,7 +68,7 @@ char	*ft_realloc(char **str, long *size, int pos)
 	return (new_str);
 }
 
-static void	get_bit(int signals)
+static void	get_bit(int signals, siginfo_t *info, void *content)
 {
 	int			num[8];
 	static int	index;
@@ -87,11 +81,12 @@ static void	get_bit(int signals)
 	num[index++] = (signals == 31);
 	if (index == 8 && pos < max)
 	{
-		string[pos++] = bit2char(num);
 		index = 0;
+		string[pos++] = bit2char(num);
 		if (end(num, &string, &pos, &index))
 		{
 			max = 0;
+			kill(info->si_pid, SIGUSR1);
 			return ;
 		}
 	}
@@ -106,8 +101,8 @@ int	main(void)
 	ft_printf("%d\n", pid);
 	ft_memset(&sa, 0, sizeof(sa));
 	sigemptyset(&sa.sa_mask);
-	sa.sa_flags = 0;
-	sa.sa_handler = get_bit;
+	sa.sa_flags = SA_SIGINFO;
+	sa.sa_sigaction = get_bit;
 	sigaction(SIGUSR1, &sa, 0);
 	sigaction(SIGUSR2, &sa, 0);
 	while (1)

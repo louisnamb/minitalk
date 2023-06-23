@@ -16,13 +16,14 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
-# include "printf/ft_printf.h"
-# include <sys/types.h>
 # include <signal.h>
+# include <sys/types.h>
+# include "printf/ft_printf.h"
+# include "libft/libft.h"
 
-static char	bit2char(int byte[]);
-int end(int byte[], char **string, int *pos, int *index)
-char *ft_realloc(char **str, long *size, int pos)
-static void get_bit(int signals)
+static char		bit2char(int byte[]);
+int				end(int byte[], char **string, int *pos, int *index);
+char			*ft_realloc(char **str, long *size, int pos);
+static void		get_bit(int signals, siginfo_t *info, void *content);
 
 #endif
